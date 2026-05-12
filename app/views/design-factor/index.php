@@ -218,7 +218,7 @@ ob_start();
 
                         <p class="text-muted mb-0">
                             Faktor desain yang memengaruhi tata kelola
-                            dan manajemen TI pada sistem e-Raport.
+                            dan manajemen TI pada Analisis Pengelolaan Layanan Desa Bogak Besar.
                         </p>
                     </div>
 
@@ -290,6 +290,8 @@ ob_start();
                             $checkedDF = [
                                 'DF2',
                                 'DF3',
+                                'DF4',
+                                'DF7',
                                 'DF11'
                             ];
 
@@ -323,33 +325,33 @@ ob_start();
 
                                         <?php
 
-                                $descriptions = [
+                                        $descriptions = [
 
-                                    'DF1'  => 'Strategi organisasi dalam pengelolaan layanan dan teknologi informasi.',
+                                            'DF1'  => 'Strategi organisasi dalam pengelolaan layanan dan teknologi informasi.',
 
-                                    'DF2'  => 'Menentukan tujuan utama layanan desa dan kebutuhan tata kelola TI.',
+                                            'DF2'  => 'Menentukan tujuan utama layanan desa dan kebutuhan tata kelola TI.',
 
-                                    'DF3'  => 'Mengidentifikasi risiko layanan, keamanan data, dan operasional sistem.',
+                                            'DF3'  => 'Mengidentifikasi risiko layanan, keamanan data, dan operasional sistem.',
 
-                                    'DF4'  => 'Permasalahan dan isu TI yang memengaruhi layanan organisasi.',
+                                            'DF4'  => 'Permasalahan dan isu TI yang memengaruhi layanan organisasi.',
 
-                                    'DF5'  => 'Ancaman lingkungan TI seperti serangan siber dan gangguan sistem.',
+                                            'DF5'  => 'Ancaman lingkungan TI seperti serangan siber dan gangguan sistem.',
 
-                                    'DF6'  => 'Kebutuhan kepatuhan terhadap regulasi dan kebijakan organisasi.',
+                                            'DF6'  => 'Kebutuhan kepatuhan terhadap regulasi dan kebijakan organisasi.',
 
-                                    'DF7'  => 'Peran TI dalam mendukung proses bisnis dan layanan organisasi.',
+                                            'DF7'  => 'Peran TI dalam mendukung proses bisnis dan layanan organisasi.',
 
-                                    'DF8'  => 'Model pengadaan atau penggunaan layanan TI dari pihak internal maupun eksternal.',
+                                            'DF8'  => 'Model pengadaan atau penggunaan layanan TI dari pihak internal maupun eksternal.',
 
-                                    'DF9'  => 'Metode implementasi dan pengembangan sistem teknologi informasi.',
+                                            'DF9'  => 'Metode implementasi dan pengembangan sistem teknologi informasi.',
 
-                                    'DF10' => 'Strategi organisasi dalam mengadopsi teknologi baru.',
+                                            'DF10' => 'Strategi organisasi dalam mengadopsi teknologi baru.',
 
-                                    'DF11' => 'Penyesuaian tata kelola berdasarkan ukuran dan kapasitas organisasi.'
+                                            'DF11' => 'Penyesuaian tata kelola berdasarkan ukuran dan kapasitas organisasi.'
 
-                                ];
+                                        ];
 
-                                echo $descriptions[$df['code']] ?? '-';
+                                        echo $descriptions[$df['code']] ?? '-';
 
                                         ?>
 

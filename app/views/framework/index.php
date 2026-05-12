@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Framework COBIT View
  */
@@ -30,9 +31,9 @@ ob_start();
                     <div>
                         <h5>Tentang COBIT 2019</h5>
                         <p class="text-muted mb-0">
-                            COBIT (Control Objectives for Information and Related Technologies) adalah framework 
-                            governance dan manajemen TI yang menyediakan praktik-praktik terbaik untuk mengelola 
-                            dan mengendalikan proses-proses TI. Dalam konteks sistem e-Raport, COBIT 2019 
+                            COBIT (Control Objectives for Information and Related Technologies) adalah framework
+                            governance dan manajemen TI yang menyediakan praktik-praktik terbaik untuk mengelola
+                            dan mengendalikan proses-proses TI. Dalam konteks sistem Analisis Pengelolaan Layanan Kantor Desa Bogak Besar, COBIT 2019
                             digunakan untuk menilai kematangan proses TI dan mengidentifikasi area perbaikan.
                         </p>
                     </div>
@@ -45,7 +46,7 @@ ob_start();
 <!-- Process Cards -->
 <!-- <div class="row g-4">
     <?php foreach ($processes as $process): ?>
-    <?php 
+    <?php
         $code = $process['code'];
         $desc = $processDescriptions[$code] ?? null;
     ?>
@@ -119,9 +120,9 @@ ob_start();
 
                         <h2 class="accordion-header" id="headingDSS">
                             <button class="accordion-button"
-                                    type="button"
-                                    data-bs-toggle="collapse"
-                                    data-bs-target="#collapseDSS">
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapseDSS">
 
                                 <div>
                                     <strong>DSS</strong><br>
@@ -132,8 +133,8 @@ ob_start();
                         </h2>
 
                         <div id="collapseDSS"
-                             class="accordion-collapse collapse show"
-                             data-bs-parent="#cobitAccordion">
+                            class="accordion-collapse collapse show"
+                            data-bs-parent="#cobitAccordion">
 
                             <div class="accordion-body">
 
@@ -156,7 +157,7 @@ ob_start();
                                                 </div>
 
                                                 <a href="index.php?page=data-penilaian&process=<?php echo $process['id']; ?>"
-                                                   class="btn btn-sm btn-primary">
+                                                    class="btn btn-sm btn-primary">
 
                                                     Penilaian
 
@@ -182,9 +183,9 @@ ob_start();
                         <h2 class="accordion-header" id="headingAPO">
 
                             <button class="accordion-button collapsed"
-                                    type="button"
-                                    data-bs-toggle="collapse"
-                                    data-bs-target="#collapseAPO">
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapseAPO">
 
                                 <div>
                                     <strong>APO</strong><br>
@@ -196,8 +197,8 @@ ob_start();
                         </h2>
 
                         <div id="collapseAPO"
-                             class="accordion-collapse collapse"
-                             data-bs-parent="#cobitAccordion">
+                            class="accordion-collapse collapse"
+                            data-bs-parent="#cobitAccordion">
 
                             <div class="accordion-body">
 
@@ -219,9 +220,9 @@ ob_start();
                         <h2 class="accordion-header" id="headingMEA">
 
                             <button class="accordion-button collapsed"
-                                    type="button"
-                                    data-bs-toggle="collapse"
-                                    data-bs-target="#collapseMEA">
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapseMEA">
 
                                 <div>
                                     <strong>MEA</strong><br>
@@ -233,8 +234,8 @@ ob_start();
                         </h2>
 
                         <div id="collapseMEA"
-                             class="accordion-collapse collapse"
-                             data-bs-parent="#cobitAccordion">
+                            class="accordion-collapse collapse"
+                            data-bs-parent="#cobitAccordion">
 
                             <div class="accordion-body">
 
@@ -256,9 +257,9 @@ ob_start();
                         <h2 class="accordion-header" id="headingEDM">
 
                             <button class="accordion-button collapsed"
-                                    type="button"
-                                    data-bs-toggle="collapse"
-                                    data-bs-target="#collapseEDM">
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapseEDM">
 
                                 <div>
                                     <strong>EDM</strong><br>
@@ -270,8 +271,8 @@ ob_start();
                         </h2>
 
                         <div id="collapseEDM"
-                             class="accordion-collapse collapse"
-                             data-bs-parent="#cobitAccordion">
+                            class="accordion-collapse collapse"
+                            data-bs-parent="#cobitAccordion">
 
                             <div class="accordion-body">
 
@@ -293,9 +294,9 @@ ob_start();
                         <h2 class="accordion-header" id="headingBAI">
 
                             <button class="accordion-button collapsed"
-                                    type="button"
-                                    data-bs-toggle="collapse"
-                                    data-bs-target="#collapseBAI">
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapseBAI">
 
                                 <div>
                                     <strong>BAI</strong><br>
@@ -307,8 +308,8 @@ ob_start();
                         </h2>
 
                         <div id="collapseBAI"
-                             class="accordion-collapse collapse"
-                             data-bs-parent="#cobitAccordion">
+                            class="accordion-collapse collapse"
+                            data-bs-parent="#cobitAccordion">
 
                             <div class="accordion-body">
 
