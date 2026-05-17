@@ -61,7 +61,7 @@ class RecommendationController {
             $recommendationData = $resultModel
                 ->generateRecommendation(
                     $capabilityLevel,
-                    3
+                    4
                 );
 
             // Simpan hasil

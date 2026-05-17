@@ -118,7 +118,7 @@ class AssessmentController {
         $capabilityLevel = $assessmentModel->calculateCapabilityLevel($processId);
         
         // Generate rekomendasi berdasarkan gap
-        $recommendationData = $resultModel->generateRecommendation($capabilityLevel, 3);
+        $recommendationData = $resultModel->generateRecommendation($capabilityLevel, 4);
         
         // Simpan hasil
         $resultModel->saveResult([

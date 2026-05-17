@@ -223,7 +223,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `created_at`, `u
 --
 DROP TABLE IF EXISTS `assessment_summary`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `assessment_summary`  AS  select `p`.`id` AS `process_id`,`p`.`code` AS `process_code`,`p`.`name` AS `process_name`,count(distinct `aq`.`id`) AS `total_questions`,count(distinct `aa`.`question_id`) AS `answered_questions`,round(avg(`aa`.`value`),2) AS `avg_capability_level`,round(3 - avg(`aa`.`value`),2) AS `gap_from_target` from ((`processes` `p` left join `assessment_questions` `aq` on(`p`.`id` = `aq`.`process_id`)) left join `assessment_answers` `aa` on(`aq`.`id` = `aa`.`question_id`)) group by `p`.`id`,`p`.`code`,`p`.`name` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `assessment_summary`  AS  select `p`.`id` AS `process_id`,`p`.`code` AS `process_code`,`p`.`name` AS `process_name`,count(distinct `aq`.`id`) AS `total_questions`,count(distinct `aa`.`question_id`) AS `answered_questions`,round(avg(`aa`.`value`),2) AS `avg_capability_level`,round(4 - avg(`aa`.`value`),2) AS `gap_from_target` from ((`processes` `p` left join `assessment_questions` `aq` on(`p`.`id` = `aq`.`process_id`)) left join `assessment_answers` `aa` on(`aq`.`id` = `aa`.`question_id`)) group by `p`.`id`,`p`.`code`,`p`.`name` ;
 
 -- --------------------------------------------------------
 

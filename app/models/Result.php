@@ -91,7 +91,7 @@ class Result {
     /**
      * Generate rekomendasi berdasarkan gap
      */
-    public function generateRecommendation($capabilityLevel, $targetLevel = 3) {
+    public function generateRecommendation($capabilityLevel, $targetLevel = 4) {
         $gap = $targetLevel - $capabilityLevel;
         
         if ($gap <= 0) {
