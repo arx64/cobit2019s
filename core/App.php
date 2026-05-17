@@ -11,12 +11,22 @@ class App {
      */
     public static function route() {
         $page = isset($_GET['page']) ? $_GET['page'] : 'login';
-        
+
         // Daftar halaman yang memerlukan autentikasi
         $protectedPages = [
-            'dashboard', 'framework', 'design-factor', 
-            'data-penilaian', 'rekomendasi', 'logout',
-            'simpan-penilaian', 'get-questions'
+            'dashboard',
+            'framework',
+            'proses',
+            'design-factor',
+            'data-penilaian',
+
+            'rekomendasi',
+            'rekomendasi-dss01',
+            'rekomendasi-dss02',
+
+            'logout',
+            'simpan-penilaian',
+            'get-questions'
         ];
         
         // Cek autentikasi untuk halaman yang dilindungi
@@ -53,7 +63,21 @@ class App {
             case 'framework':
                 FrameworkController::index();
                 break;
+            case 'proses':
+                FrameworkController::proses();
+                break;
                 
+            // Respondent
+            case 'respondents':
+                RespondentController::index();
+                break;
+            case 'save-respondent':
+                RespondentController::save();
+                break;
+            case 'delete-respondent':
+                RespondentController::delete();
+                break;
+
             // Design Factor
             case 'design-factor':
                 DesignFactorController::index();
@@ -69,10 +93,18 @@ class App {
             case 'get-questions':
                 AssessmentController::getQuestions();
                 break;
-                
+
             // Rekomendasi
             case 'rekomendasi':
                 RecommendationController::index();
+                break;
+
+            case 'rekomendasi-dss01':
+                RecommendationController::dss01();
+                break;
+
+            case 'rekomendasi-dss02':
+                RecommendationController::dss02();
                 break;
                 
             // Default - 404

@@ -20,13 +20,29 @@ foreach ($results as $result) {
     $chartGaps[] = $result['recommendation']['gap'];
 }
 
+$currentResult = $results[0] ?? null;
+
+$currentProcessCode = $currentResult['process']['code'] ?? '-';
+$currentProcessName = $currentResult['process']['name'] ?? '-';
+
+$currentCapability = $currentResult['capability_level'] ?? 0;
+
+$currentGap = $currentResult['recommendation']['gap'] ?? 0;
+
+$currentLevel = $currentResult['recommendation']['level'] ?? '-';
+
+$reportDate = isset($_GET['date']) && !empty($_GET['date'])
+    ? $_GET['date']
+    : date('Y-m-d');
+
+$respondentName = $_SESSION['user_name'] ?? 'Operator Sistem';
 ob_start();
 ?>
 
 <!-- Print Header (only visible when printing) -->
 <div class="print-header d-none">
     <h2>Laporan Hasil Analisis COBIT 2019</h2>
-    <p>Sistem Analisis Risiko TI untuk e-Raport</p>
+    <p>Sistem Analisis Pengelolaan Layanan Desa Bogak Besar berbasis COBIT 2019</p>
     <p>Tanggal: <?php echo date('d F Y'); ?></p>
     <hr>
 </div>
@@ -105,39 +121,85 @@ ob_start();
     <!-- Charts Section -->
     <div id="chartsSection" class="row mb-4 no-print">
 
-        <!-- Grafik DSS01 -->
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">
-                        <i class="bi bi-bar-chart me-2"></i>
-                        Grafik Capability Level DSS01
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="chart-container">
-                        <canvas id="capabilityChartDSS01"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <?php if ($selectedProcessId == 1): ?>
 
-        <!-- Grafik DSS02 -->
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">
-                        <i class="bi bi-bar-chart me-2"></i>
-                        Grafik Capability Level DSS02
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="chart-container">
-                        <canvas id="capabilityChartDSS02"></canvas>
+            <!-- Grafik DSS01 -->
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="bi bi-bar-chart me-2"></i>
+                            Grafik Capability Level DSS01
+                        </h5>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="capabilityChartDSS01"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+
+        <?php elseif ($selectedProcessId == 2): ?>
+
+            <!-- Grafik DSS02 -->
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="bi bi-bar-chart me-2"></i>
+                            Grafik Capability Level DSS02
+                        </h5>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="capabilityChartDSS02"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <?php else: ?>
+
+            <!-- Semua grafik -->
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="bi bi-bar-chart me-2"></i>
+                            Grafik Capability Level DSS01
+                        </h5>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="capabilityChartDSS01"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="bi bi-bar-chart me-2"></i>
+                            Grafik Capability Level DSS02
+                        </h5>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="capabilityChartDSS02"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <?php endif; ?>
+
     </div>
 
     <!-- Priority Process -->
@@ -573,56 +635,307 @@ ob_start();
     };
 
     // Grafik DSS01
-    const ctxDSS01 = document.getElementById('capabilityChartDSS01').getContext('2d');
+    const dss01Canvas = document.getElementById('capabilityChartDSS01');
 
-    new Chart(ctxDSS01, {
-        type: 'bar',
-        data: {
-            labels: dss01Labels,
-            datasets: [{
-                label: 'DSS01 – Manage Operations',
-                data: [dss01Current, dss01Target],
-                backgroundColor: [
-                    'rgba(13, 110, 253, 0.7)',
-                    'rgba(25, 135, 84, 0.7)'
-                ],
-                borderColor: [
-                    'rgba(13, 110, 253, 1)',
-                    'rgba(25, 135, 84, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: chartOptions
-    });
+    if (dss01Canvas) {
+
+        const ctxDSS01 = dss01Canvas.getContext('2d');
+
+        new Chart(ctxDSS01, {
+            type: 'bar',
+            data: {
+                labels: dss01Labels,
+                datasets: [{
+                    label: 'DSS01 – Manage Operations',
+                    data: [dss01Current, dss01Target],
+                    backgroundColor: [
+                        'rgba(13, 110, 253, 0.7)',
+                        'rgba(25, 135, 84, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(13, 110, 253, 1)',
+                        'rgba(25, 135, 84, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: chartOptions
+        });
+
+    }
 
     // Grafik DSS02
-    const ctxDSS02 = document.getElementById('capabilityChartDSS02').getContext('2d');
+    const dss02Canvas = document.getElementById('capabilityChartDSS02');
 
-    new Chart(ctxDSS02, {
-        type: 'bar',
-        data: {
-            labels: dss02Labels,
-            datasets: [{
-                label: 'DSS02 – Manage Service Requests and Incidents',
-                data: [dss02Current, dss02Target],
-                backgroundColor: [
-                    'rgba(13, 110, 253, 0.7)',
-                    'rgba(25, 135, 84, 0.7)'
-                ],
-                borderColor: [
-                    'rgba(13, 110, 253, 1)',
-                    'rgba(25, 135, 84, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: chartOptions
-    });
-    
+    if (dss02Canvas) {
+
+        const ctxDSS02 = dss02Canvas.getContext('2d');
+
+        new Chart(ctxDSS02, {
+            type: 'bar',
+            data: {
+                labels: dss02Labels,
+                datasets: [{
+                    label: 'DSS02 – Manage Service Requests and Incidents',
+                    data: [dss02Current, dss02Target],
+                    backgroundColor: [
+                        'rgba(13, 110, 253, 0.7)',
+                        'rgba(25, 135, 84, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(13, 110, 253, 1)',
+                        'rgba(25, 135, 84, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: chartOptions
+        });
+
+    }
+
     // Print Function
     function printReport() {
-        window.print();
+
+        const printWindow = window.open('', '_blank');
+
+        const reportContent = `
+    <html>
+    <head>
+        <title>Laporan COBIT 2019</title>
+
+        <style>
+
+            body{
+                font-family: Arial, sans-serif;
+                padding:40px;
+                color:#000;
+                line-height:1.6;
+            }
+
+            .header{
+                display:flex;
+                align-items:center;
+                border-bottom:3px solid #000;
+                padding-bottom:15px;
+                margin-bottom:30px;
+            }
+
+            .logo{
+                width:90px;
+                height:90px;
+                margin-right:20px;
+            }
+
+            .header-text{
+                flex:1;
+                text-align:center;
+            }
+
+            .header-text h2{
+                margin:0;
+                font-size:22px;
+                text-transform:uppercase;
+            }
+
+            .header-text h3{
+                margin:5px 0;
+                font-size:18px;
+            }
+
+            .header-text p{
+                margin:0;
+                font-size:14px;
+            }
+
+            .report-title{
+                text-align:center;
+                margin:30px 0;
+            }
+
+            .report-title h3{
+                margin:0;
+                text-decoration:underline;
+            }
+
+            .info-table{
+                width:100%;
+                margin-bottom:25px;
+            }
+
+            .info-table td{
+                padding:6px 0;
+                vertical-align:top;
+            }
+
+            .section-title{
+                margin-top:30px;
+                margin-bottom:15px;
+                font-size:18px;
+                font-weight:bold;
+            }
+
+            table{
+                width:100%;
+                border-collapse:collapse;
+                margin-top:10px;
+            }
+
+            table th,
+            table td{
+                border:1px solid #000;
+                padding:10px;
+                text-align:left;
+            }
+
+            table th{
+                background:#f0f0f0;
+            }
+
+            .recommendation-box{
+                margin-top:20px;
+            }
+
+            .recommendation-box ol{
+                padding-left:20px;
+            }
+
+            .signature{
+                width:300px;
+                margin-left:auto;
+                margin-top:60px;
+                text-align:center;
+            }
+
+            .signature-space{
+                height:80px;
+            }
+
+            @media print{
+                body{
+                    padding:0;
+                }
+            }
+
+        </style>
+    </head>
+
+    <body>
+
+        <div class="header">
+
+            <img 
+                src="public/assets/img/Lambang_Kabupaten_Serdang_Bedagai.png"
+                class="logo"
+            >
+
+            <div class="header-text">
+                <h2>Pemerintah Desa Bogak Besar</h2>
+                <h3>Sistem Analisis Pengelolaan Layanan</h3>
+                <p>Framework COBIT 2019</p>
+            </div>
+
+        </div>
+
+        <div class="report-title">
+            <h3>LAPORAN HASIL ANALISIS DAN REKOMENDASI</h3>
+            <p>${new Date().toLocaleDateString('id-ID')}</p>
+        </div>
+
+        <table class="info-table">
+            <tr>
+                <td width="220"><strong>Nama Responden</strong></td>
+                <td>: <?php echo $respondentName; ?></td>
+            </tr>
+
+            <tr>
+                <td><strong>Domain COBIT</strong></td>
+                <td>: <?php echo $currentProcessCode; ?></td>
+            </tr>
+
+            <tr>
+                <td><strong>Nama Proses</strong></td>
+                <td>: <?php echo $currentProcessName; ?></td>
+            </tr>
+
+            <tr>
+                <td><strong>Tanggal Penilaian</strong></td>
+                <td>: <?php echo date('d F Y', strtotime($reportDate)); ?></td>
+            </tr>
+        </table>
+
+        <div class="section-title">
+            Hasil Capability Level
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Capability Level</th>
+                    <th>Target</th>
+                    <th>Gap</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td><?php echo number_format($currentCapability, 2); ?></td>
+                    <td><?php echo $targetLevel; ?>.0</td>
+                    <td><?php echo $currentGap; ?></td>
+                    <td><?php echo $currentLevel; ?></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="section-title">
+            Rekomendasi Perbaikan
+        </div>
+
+        <div class="recommendation-box">
+            <ol>
+
+                <?php foreach ($currentResult['recommendation']['recommendations'] as $rec): ?>
+
+                    <li><?php echo addslashes($rec); ?></li>
+
+                <?php endforeach; ?>
+
+            </ol>
+        </div>
+
+        <div class="signature">
+
+            <p>
+                Bogak Besar,
+                <?php echo date('d F Y'); ?>
+            </p>
+
+            <p>
+                Mengetahui,
+            </p>
+
+            <div class="signature-space"></div>
+
+            <strong>
+                Kepala Desa Bogak Besar
+            </strong>
+
+        </div>
+
+    </body>
+    </html>
+    `;
+
+        printWindow.document.write(reportContent);
+
+        printWindow.document.close();
+
+        printWindow.focus();
+
+        setTimeout(() => {
+            printWindow.print();
+        }, 500);
     }
 
     // Toggle Charts

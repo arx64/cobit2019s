@@ -5,6 +5,7 @@
  */
 
 require_once 'app/models/Process.php';
+require_once 'app/models/Respondent.php';
 require_once 'app/models/Assessment.php';
 require_once 'app/models/Result.php';
 
@@ -15,23 +16,41 @@ class AssessmentController {
      */
     public static function index() {
         $processModel = new Process();
+        $respondentModel = new Respondent();
         $assessmentModel = new Assessment();
         
         $processes = $processModel->getAll();
+        $respondents = $respondentModel->getAll();
         
         // Ambil proses yang dipilih (default: DSS01)
         $selectedProcessId = isset($_GET['process']) ? intval($_GET['process']) : 1;
         $selectedProcess = $processModel->getById($selectedProcessId);
+
+        // Ambil responden yang dipilih
+        $selectedRespondentId = isset($_GET['respondent_id']) ? intval($_GET['respondent_id']) : 0;
+        $selectedRespondent = $selectedRespondentId ? $respondentModel->getById($selectedRespondentId) : null;
+        // $selectedDate = isset($_GET['date']) ? $_GET['date'] : '';
+        $today = date('Y-m-d');
+
+        $selectedDate = isset($_GET['date']) && !empty($_GET['date'])
+            ? $_GET['date']
+            : $today;
+
+        // Prevent future date
+        if ($selectedDate > $today) {
+            $selectedDate = $today;
+        }
+        $assessmentDates = $selectedRespondent ? $assessmentModel->getAssessmentDatesByRespondent($selectedRespondentId) : [];
         
-        // Ambil pertanyaan untuk proses terpilih
-        $questions = $assessmentModel->getQuestionsByProcess($selectedProcessId);
-        
-        // Ambil jawaban yang sudah ada
+        $questions = [];
         $answers = [];
-        foreach ($questions as $question) {
-            $answer = $assessmentModel->getAnswerByQuestion($question['id']);
-            if ($answer) {
-                $answers[$question['id']] = $answer['value'];
+        if ($selectedRespondent) {
+            $questions = $assessmentModel->getQuestionsByProcess($selectedProcessId);
+            foreach ($questions as $question) {
+                $answer = $assessmentModel->getAnswerByQuestion($question['id'], $selectedRespondentId, $selectedDate ?: null);
+                if ($answer) {
+                    $answers[$question['id']] = $answer['value'];
+                }
             }
         }
         
@@ -62,9 +81,18 @@ class AssessmentController {
         
         $processId = isset($_POST['process_id']) ? intval($_POST['process_id']) : 0;
         $answers = isset($_POST['answers']) ? $_POST['answers'] : [];
+        $date = isset($_POST['date']) ? $_POST['date'] : date('Y-m-d');
+        $today = date('Y-m-d');
+
+        // Tidak boleh tanggal masa depan
+        if ($date > $today) {
+            header('Location: index.php?page=data-penilaian&error=future_date');
+            exit;
+        }
         
-        if (empty($processId) || empty($answers)) {
-            header('Location: index.php?page=data-penilaian&process=' . $processId . '&error=1');
+        $respondentId = isset($_POST['respondent_id']) ? intval($_POST['respondent_id']) : 0;
+        if (empty($processId) || empty($respondentId) || empty($answers)) {
+            header('Location: index.php?page=data-penilaian&process=' . $processId . '&respondent_id=' . $respondentId . '&error=1');
             exit;
         }
         
@@ -73,8 +101,15 @@ class AssessmentController {
         
         // Simpan setiap jawaban
         foreach ($answers as $questionId => $value) {
+            // $assessmentModel->saveAnswer([
+            //     'question_id' => intval($questionId),
+            //     'respondent_id' => $respondentId,
+            //     'value' => intval($value)
+            // ]);
             $assessmentModel->saveAnswer([
                 'question_id' => intval($questionId),
+                'respondent_id' => $respondentId,
+                'assessment_date' => $date,
                 'value' => intval($value)
             ]);
         }
@@ -93,7 +128,9 @@ class AssessmentController {
             'recommendation' => json_encode($recommendationData)
         ]);
         
-        header('Location: index.php?page=data-penilaian&process=' . $processId . '&success=1');
+        $selectedDate = isset($_POST['date']) ? $_POST['date'] : '';
+        $dateParam = $selectedDate ? '&date=' . urlencode($selectedDate) : '';
+        header('Location: index.php?page=data-penilaian&process=' . $processId . '&respondent_id=' . $respondentId . $dateParam . '&success=1');
         exit;
     }
     
@@ -104,18 +141,30 @@ class AssessmentController {
         header('Content-Type: application/json');
         
         $processId = isset($_GET['process_id']) ? intval($_GET['process_id']) : 0;
+        $respondentId = isset($_GET['respondent_id']) ? intval($_GET['respondent_id']) : 0;
         
-        if (empty($processId)) {
-            echo json_encode(['error' => 'Process ID required']);
+        if (empty($processId) || empty($respondentId)) {
+            echo json_encode(['error' => 'Process ID and respondent ID required']);
             exit;
         }
         
         $assessmentModel = new Assessment();
         $questions = $assessmentModel->getQuestionsByProcess($processId);
+        // $selectedDate = isset($_GET['date']) ? $_GET['date'] : '';
+        $today = date('Y-m-d');
+
+        $selectedDate = isset($_GET['date']) && !empty($_GET['date'])
+            ? $_GET['date']
+            : $today;
+
+        // Prevent future date
+        if ($selectedDate > $today) {
+            $selectedDate = $today;
+        }
         
-        // Ambil jawaban yang sudah ada
+        // Ambil jawaban yang sudah ada untuk responden
         foreach ($questions as &$question) {
-            $answer = $assessmentModel->getAnswerByQuestion($question['id']);
+            $answer = $assessmentModel->getAnswerByQuestion($question['id'], $respondentId, $selectedDate ?: null);
             $question['current_value'] = $answer ? intval($answer['value']) : null;
         }
         

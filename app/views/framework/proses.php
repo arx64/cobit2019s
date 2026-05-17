@@ -4,8 +4,8 @@
  * Framework COBIT View
  */
 
-$title = 'Framework COBIT';
-$pageTitle = 'Framework COBIT';
+$title = 'Proses COBIT';
+$pageTitle = 'Proses COBIT';
 
 ob_start();
 ?>
@@ -107,225 +107,40 @@ ob_start();
             <div class="card-header bg-primary text-white">
                 <h5 class="mb-0">
                     <i class="bi bi-diagram-3 me-2"></i>
-                    Daftar Domain COBIT 2019
+                    Proses Domain DSS (Deliver, Service, and Support)
                 </h5>
             </div>
 
             <div class="card-body">
-
-                <div class="accordion" id="cobitAccordion">
-
-                    <!-- DSS -->
-                    <div class="accordion-item">
-
-                        <h2 class="accordion-header" id="headingDSS">
-                            <button class="accordion-button"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#collapseDSS">
-
-                                <div>
-                                    <strong>DSS</strong><br>
-                                    <small>Deliver, Service, and Support</small>
-                                </div>
-
-                            </button>
-                        </h2>
-
-                        <div id="collapseDSS"
-                            class="accordion-collapse collapse show"
-                            data-bs-parent="#cobitAccordion">
-
-                            <div class="accordion-body" id="proses-dss">
-
-                                <?php foreach ($processes as $process): ?>
-
-                                    <?php if (strpos($process['code'], 'DSS') === 0): ?>
-
-                                        <div class="border rounded p-3 mb-3">
-
-                                            <div class="d-flex justify-content-between align-items-center">
-
-                                                <div>
-                                                    <h6 class="mb-1">
-                                                        <?php echo $process['code']; ?>
-                                                    </h6>
-
-                                                    <small class="text-muted">
-                                                        <?php echo $process['name']; ?>
-                                                    </small>
-                                                </div>
-
-                                                <a href="index.php?page=data-penilaian&process=<?php echo $process['id']; ?>"
-                                                    class="btn btn-sm btn-primary">
-
-                                                    Penilaian
-
-                                                </a>
-
-                                            </div>
-
-                                        </div>
-
-                                    <?php endif; ?>
-
-                                <?php endforeach; ?>
-
-                            </div>
-
-                        </div>
-                    </div>
-
-
-                    <!-- APO -->
-                    <div class="accordion-item">
-
-                        <h2 class="accordion-header" id="headingAPO">
-
-                            <button class="accordion-button collapsed"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#collapseAPO">
-
-                                <div>
-                                    <strong>APO</strong><br>
-                                    <small>Align, Plan, and Organize</small>
-                                </div>
-
-                            </button>
-
-                        </h2>
-
-                        <div id="collapseAPO"
-                            class="accordion-collapse collapse"
-                            data-bs-parent="#cobitAccordion">
-
-                            <div class="accordion-body">
-
-                                <p class="text-muted mb-0">
-                                    Domain APO membahas strategi,
-                                    perencanaan, dan tata kelola TI.
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- MEA -->
-                    <div class="accordion-item">
-
-                        <h2 class="accordion-header" id="headingMEA">
-
-                            <button class="accordion-button collapsed"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#collapseMEA">
-
-                                <div>
-                                    <strong>MEA</strong><br>
-                                    <small>Monitor, Evaluate, and Assess</small>
-                                </div>
-
-                            </button>
-
-                        </h2>
-
-                        <div id="collapseMEA"
-                            class="accordion-collapse collapse"
-                            data-bs-parent="#cobitAccordion">
-
-                            <div class="accordion-body">
-
-                                <p class="text-muted mb-0">
-                                    Domain MEA fokus pada monitoring,
-                                    evaluasi, dan penilaian performa TI.
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- EDM -->
-                    <div class="accordion-item">
-
-                        <h2 class="accordion-header" id="headingEDM">
-
-                            <button class="accordion-button collapsed"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#collapseEDM">
-
-                                <div>
-                                    <strong>EDM</strong><br>
-                                    <small>Evaluate, Direct, and Monitor</small>
-                                </div>
-
-                            </button>
-
-                        </h2>
-
-                        <div id="collapseEDM"
-                            class="accordion-collapse collapse"
-                            data-bs-parent="#cobitAccordion">
-
-                            <div class="accordion-body">
-
-                                <p class="text-muted mb-0">
-                                    Domain EDM berkaitan dengan governance
-                                    dan pengawasan TI.
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- BAI -->
-                    <div class="accordion-item">
-
-                        <h2 class="accordion-header" id="headingBAI">
-
-                            <button class="accordion-button collapsed"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#collapseBAI">
-
-                                <div>
-                                    <strong>BAI</strong><br>
-                                    <small>Build, Acquire, and Implement</small>
-                                </div>
-
-                            </button>
-
-                        </h2>
-
-                        <div id="collapseBAI"
-                            class="accordion-collapse collapse"
-                            data-bs-parent="#cobitAccordion">
-
-                            <div class="accordion-body">
-
-                                <p class="text-muted mb-0">
-                                    Domain BAI fokus pada pembangunan,
-                                    implementasi, dan perubahan sistem TI.
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">Kode Proses</th>
+                                <th scope="col">Nama Proses</th>
+                                <th scope="col">Alasan Dipilih</th>
+                                <th scope="col">Fokus Evaluasi</th>
+                                <th scope="col">Kuesioner</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>DSS01</td>
+                                <td>Manage Operations</td>
+                                <td>Berkaitan dengan kegiatan operasional layanan TI sehari-hari yang masih memerlukan peningkatan</td>
+                                <td>Prosedur operasional, pengelolaan infrastruktur TI, lingkungan operasional, pemeliharaan perangkat.</td>
+                                <td><a href="index.php?page=data-penilaian&process=1" class="btn btn-sm btn-outline-primary">Lihat Kuesioner</a></td>
+                            </tr>
+                            <tr>
+                                <td>DSS02</td>
+                                <td>Manage Service Requests and Incidents</td>
+                                <td>Penanganan permintaan layanan dan insiden masih belum terstruktur</td>
+                                <td>Klasifikasi masalah, pencatatan insiden, analisis masalah, penyelesaian insiden, monitoring layanan.</td>
+                                <td><a href="index.php?page=data-penilaian&process=2" class="btn btn-sm btn-outline-primary">Lihat Kuesioner</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-
             </div>
         </div>
 

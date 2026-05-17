@@ -33,6 +33,7 @@ require_once 'app/controllers/FrameworkController.php';
 require_once 'app/controllers/DesignFactorController.php';
 require_once 'app/controllers/AssessmentController.php';
 require_once 'app/controllers/RecommendationController.php';
+require_once 'app/controllers/RespondentController.php';
 
 // Route the request
 App::route();

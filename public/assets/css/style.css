@@ -240,6 +240,32 @@ body {
     box-shadow: var(--box-shadow-lg);
 }
 
+.has-submenu {
+    position: relative;
+}
+
+.has-submenu > .submenu {
+    display: none;
+    padding-left: 0;
+    background: rgba(255,255,255,0.03);
+}
+
+.has-submenu:hover > .submenu {
+    display: block;
+}
+
+.has-submenu .submenu li a {
+    padding: 0.75rem 1.5rem 0.75rem 3rem;
+    color: rgba(255,255,255,0.75);
+    font-size: 0.95rem;
+    border-left-color: transparent;
+}
+
+.has-submenu .submenu li a:hover {
+    color: #fff;
+    background: rgba(255,255,255,0.08);
+}
+
 .card-header {
     background-color: #fff;
     border-bottom: 1px solid #e9ecef;

@@ -60,4 +60,11 @@ class FrameworkController {
         
         require_once 'app/views/framework/index.php';
     }
+
+    /**
+     * Tampilkan halaman Proses DSS
+     */
+    public static function proses() {
+        require_once 'app/views/framework/proses.php';
+    }
 }
