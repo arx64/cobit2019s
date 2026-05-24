@@ -259,107 +259,34 @@ ob_start();
                         <thead class="table-light">
 
                             <tr>
-                                <th width="12%">Kode DF</th>
+                                <th width="15%">Kode DF</th>
                                 <th width="25%">Nama DF</th>
-                                <th width="25%">DF Layanan Desa</th>
-                                <th>Keterangan</th>
+                                <th width="35%">Deskripsi</th>
+                                <th width="15%">Status</th>
                             </tr>
 
                         </thead>
 
                         <tbody>
 
-                            <?php
-
-                            $dfList = [
-
-                                ['code' => 'DF1',  'name' => 'Enterprise Strategy'],
-                                ['code' => 'DF2',  'name' => 'Enterprise Goals'],
-                                ['code' => 'DF3',  'name' => 'Risk Profile'],
-                                ['code' => 'DF4',  'name' => 'I&T Related Issues'],
-                                ['code' => 'DF5',  'name' => 'Threat Landscape'],
-                                ['code' => 'DF6',  'name' => 'Compliance Requirements'],
-                                ['code' => 'DF7',  'name' => 'Role of IT'],
-                                ['code' => 'DF8',  'name' => 'Sourcing Model'],
-                                ['code' => 'DF9',  'name' => 'IT Implementation Methods'],
-                                ['code' => 'DF10', 'name' => 'Technology Adoption Strategy'],
-                                ['code' => 'DF11', 'name' => 'Enterprise Size']
-
-                            ];
-
-                            $checkedDF = [
-                                'DF2',
-                                'DF3',
-                                'DF4',
-                                'DF7',
-                                'DF11'
-                            ];
-
-                            ?>
-
-                            <?php foreach ($dfList as $df): ?>
-
+                            <?php if (!empty($designFactors)): ?>
+                                <?php foreach ($designFactors as $df): ?>
+                                    <tr>
+                                        <td><strong><?php echo htmlspecialchars($df['code']); ?></strong></td>
+                                        <td class="text-start"><?php echo htmlspecialchars($df['name']); ?></td>
+                                        <td class="text-start"><?php echo htmlspecialchars($df['description']); ?></td>
+                                        <td>
+                                            <span class="badge bg-<?php echo $df['is_active'] ? 'success' : 'secondary'; ?>">
+                                                <?php echo $df['is_active'] ? 'Aktif' : 'Nonaktif'; ?>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
                                 <tr>
-
-                                    <td>
-                                        <strong>
-                                            <?php echo $df['code']; ?>
-                                        </strong>
-                                    </td>
-
-                                    <td class="text-start">
-                                        <?php echo $df['name']; ?>
-                                    </td>
-
-                                    <td>
-
-                                        <?php if (in_array($df['code'], $checkedDF)): ?>
-
-                                            <i class="bi bi-check-lg text-success fs-4"></i>
-
-                                        <?php endif; ?>
-
-                                    </td>
-
-                                    <td class="text-start">
-
-                                        <?php
-
-                                        $descriptions = [
-
-                                            'DF1'  => 'Strategi organisasi dalam pengelolaan layanan dan teknologi informasi.',
-
-                                            'DF2'  => 'Menentukan tujuan utama layanan desa dan kebutuhan tata kelola TI.',
-
-                                            'DF3'  => 'Mengidentifikasi risiko layanan, keamanan data, dan operasional sistem.',
-
-                                            'DF4'  => 'Permasalahan dan isu TI yang memengaruhi layanan organisasi.',
-
-                                            'DF5'  => 'Ancaman lingkungan TI seperti serangan siber dan gangguan sistem.',
-
-                                            'DF6'  => 'Kebutuhan kepatuhan terhadap regulasi dan kebijakan organisasi.',
-
-                                            'DF7'  => 'Peran TI dalam mendukung proses bisnis dan layanan organisasi.',
-
-                                            'DF8'  => 'Model pengadaan atau penggunaan layanan TI dari pihak internal maupun eksternal.',
-
-                                            'DF9'  => 'Metode implementasi dan pengembangan sistem teknologi informasi.',
-
-                                            'DF10' => 'Strategi organisasi dalam mengadopsi teknologi baru.',
-
-                                            'DF11' => 'Penyesuaian tata kelola berdasarkan ukuran dan kapasitas organisasi.'
-
-                                        ];
-
-                                        echo $descriptions[$df['code']] ?? '-';
-
-                                        ?>
-
-                                    </td>
-
+                                    <td colspan="4">Belum ada Design Factor yang tersedia. Silakan hubungi admin untuk menambahkan.</td>
                                 </tr>
-
-                            <?php endforeach; ?>
+                            <?php endif; ?>
 
                         </tbody>
 

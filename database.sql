@@ -110,6 +110,7 @@ CREATE TABLE `design_factors` (
   `code` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
   `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_active` tinyint(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'Status aktif/nonaktif design factor',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -267,6 +268,14 @@ ALTER TABLE `processes`
   ADD UNIQUE KEY `code` (`code`),
   ADD KEY `idx_code` (`code`),
   ADD KEY `idx_process_active` (`is_active`);
+
+--
+-- Indeks untuk tabel `design_factors`
+--
+ALTER TABLE `design_factors`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `code` (`code`),
+  ADD KEY `idx_design_factor_active` (`is_active`);
 
 --
 -- Indeks untuk tabel `respondents`

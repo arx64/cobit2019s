@@ -35,6 +35,10 @@ class App {
             'save-question',
             'delete-question',
             'toggle-question',
+            'design-factors',
+            'save-design-factor',
+            'delete-design-factor',
+            'toggle-design-factor',
 
             'logout',
             'simpan-penilaian',
@@ -114,6 +118,18 @@ class App {
                 break;
             case 'toggle-question':
                 ManagementController::toggleQuestion();
+                break;
+            case 'design-factors':
+                ManagementController::designFactors();
+                break;
+            case 'save-design-factor':
+                ManagementController::saveDesignFactor();
+                break;
+            case 'delete-design-factor':
+                ManagementController::deleteDesignFactor();
+                break;
+            case 'toggle-design-factor':
+                ManagementController::toggleDesignFactor();
                 break;
 
             // Design Factor

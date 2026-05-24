@@ -16,8 +16,14 @@ class DesignFactor {
     /**
      * Ambil semua design factors
      */
-    public function getAll() {
-        $stmt = $this->db->query("SELECT * FROM design_factors ORDER BY code ASC");
+    public function getAll($activeOnly = false) {
+        $sql = "SELECT * FROM design_factors";
+        if ($activeOnly) {
+            $sql .= " WHERE is_active = 1";
+        }
+        $sql .= " ORDER BY code ASC";
+
+        $stmt = $this->db->query($sql);
         return $stmt->fetchAll();
     }
     
@@ -37,6 +43,37 @@ class DesignFactor {
         $stmt = $this->db->prepare("SELECT * FROM design_factors WHERE code = :code LIMIT 1");
         $stmt->execute(['code' => $code]);
         return $stmt->fetch();
+    }
+
+    public function create($data) {
+        $stmt = $this->db->prepare("INSERT INTO design_factors (code, name, description, is_active, created_at) VALUES (:code, :name, :description, :is_active, NOW())");
+        return $stmt->execute([
+            'code' => $data['code'],
+            'name' => $data['name'],
+            'description' => $data['description'],
+            'is_active' => isset($data['is_active']) ? intval($data['is_active']) : 1
+        ]);
+    }
+
+    public function update($data) {
+        $stmt = $this->db->prepare("UPDATE design_factors SET code = :code, name = :name, description = :description, is_active = :is_active WHERE id = :id");
+        return $stmt->execute([
+            'id' => $data['id'],
+            'code' => $data['code'],
+            'name' => $data['name'],
+            'description' => $data['description'],
+            'is_active' => isset($data['is_active']) ? intval($data['is_active']) : 1
+        ]);
+    }
+
+    public function delete($id) {
+        $stmt = $this->db->prepare("DELETE FROM design_factors WHERE id = :id");
+        return $stmt->execute(['id' => $id]);
+    }
+
+    public function toggleActive($id, $active) {
+        $stmt = $this->db->prepare("UPDATE design_factors SET is_active = :is_active WHERE id = :id");
+        return $stmt->execute(['id' => $id, 'is_active' => $active ? 1 : 0]);
     }
     
     /**

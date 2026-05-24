@@ -147,6 +147,12 @@ $baseUrl = 'index.php';
                                         <span>Pertanyaan Assessment</span>
                                     </a>
                                 </li>
+                                <li class="<?php echo $currentPage === 'design-factors' ? 'active' : ''; ?>">
+                                    <a href="<?php echo $baseUrl; ?>?page=design-factors">
+                                        <i class="bi bi-sliders me-2"></i>
+                                        <span>Design Factor</span>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     <?php endif; ?>

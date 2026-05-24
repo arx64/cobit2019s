@@ -6,6 +6,7 @@
 
 require_once 'app/models/Process.php';
 require_once 'app/models/Assessment.php';
+require_once 'app/models/DesignFactor.php';
 
 class ManagementController {
     private static function requireAdmin() {
@@ -114,6 +115,91 @@ class ManagementController {
         }
 
         require_once 'app/views/admin/questions.php';
+    }
+
+    public static function designFactors() {
+        self::requireAdmin();
+
+        $designFactorModel = new DesignFactor();
+        $designFactors = $designFactorModel->getAll();
+        $editDesignFactor = null;
+
+        if (isset($_GET['action']) && $_GET['action'] === 'edit' && isset($_GET['id'])) {
+            $editDesignFactor = $designFactorModel->getById(intval($_GET['id']));
+        }
+
+        require_once 'app/views/admin/design_factors.php';
+    }
+
+    public static function saveDesignFactor() {
+        self::requireAdmin();
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: index.php?page=design-factors');
+            exit;
+        }
+
+        $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
+        $code = trim($_POST['code'] ?? '');
+        $name = trim($_POST['name'] ?? '');
+        $description = trim($_POST['description'] ?? '');
+        $isActive = isset($_POST['is_active']) ? 1 : 0;
+
+        if ($code === '' || $name === '') {
+            header('Location: index.php?page=design-factors&error=missing_fields');
+            exit;
+        }
+
+        $designFactorModel = new DesignFactor();
+        if ($id > 0) {
+            $designFactorModel->update([
+                'id' => $id,
+                'code' => strtoupper($code),
+                'name' => $name,
+                'description' => $description,
+                'is_active' => $isActive
+            ]);
+        } else {
+            $designFactorModel->create([
+                'code' => strtoupper($code),
+                'name' => $name,
+                'description' => $description,
+                'is_active' => $isActive
+            ]);
+        }
+
+        header('Location: index.php?page=design-factors&success=1');
+        exit;
+    }
+
+    public static function deleteDesignFactor() {
+        self::requireAdmin();
+
+        if (!isset($_GET['id'])) {
+            header('Location: index.php?page=design-factors');
+            exit;
+        }
+
+        $designFactorModel = new DesignFactor();
+        $designFactorModel->delete(intval($_GET['id']));
+
+        header('Location: index.php?page=design-factors&deleted=1');
+        exit;
+    }
+
+    public static function toggleDesignFactor() {
+        self::requireAdmin();
+
+        if (!isset($_GET['id']) || !isset($_GET['value'])) {
+            header('Location: index.php?page=design-factors');
+            exit;
+        }
+
+        $designFactorModel = new DesignFactor();
+        $designFactorModel->toggleActive(intval($_GET['id']), intval($_GET['value']));
+
+        header('Location: index.php?page=design-factors&success=1');
+        exit;
     }
 
     public static function saveQuestion() {
