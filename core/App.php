@@ -24,6 +24,18 @@ class App {
             'rekomendasi-dss01',
             'rekomendasi-dss02',
 
+            'respondents',
+            'save-respondent',
+            'delete-respondent',
+            'processes',
+            'save-process',
+            'delete-process',
+            'toggle-process',
+            'questions',
+            'save-question',
+            'delete-question',
+            'toggle-question',
+
             'logout',
             'simpan-penilaian',
             'get-questions'
@@ -76,6 +88,32 @@ class App {
                 break;
             case 'delete-respondent':
                 RespondentController::delete();
+                break;
+
+            // Management
+            case 'processes':
+                ManagementController::processes();
+                break;
+            case 'save-process':
+                ManagementController::saveProcess();
+                break;
+            case 'delete-process':
+                ManagementController::deleteProcess();
+                break;
+            case 'toggle-process':
+                ManagementController::toggleProcess();
+                break;
+            case 'questions':
+                ManagementController::questions();
+                break;
+            case 'save-question':
+                ManagementController::saveQuestion();
+                break;
+            case 'delete-question':
+                ManagementController::deleteQuestion();
+                break;
+            case 'toggle-question':
+                ManagementController::toggleQuestion();
                 break;
 
             // Design Factor

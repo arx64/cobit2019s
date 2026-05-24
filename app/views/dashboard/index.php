@@ -27,6 +27,30 @@ ob_start();
     </div>
 </div>
 
+<?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-shield-lock me-2"></i>Peran Admin / Operator</h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-2">
+                        <strong>Admin</strong> adalah pengguna yang memiliki hak untuk mengelola master data sistem, termasuk domain/proses COBIT, pertanyaan assessment, bobot penilaian, dan responden.
+                    </p>
+                    <ul>
+                        <li>Mengelola domain/proses COBIT (tambah, ubah, hapus, aktif/nonaktif).</li>
+                        <li>Mengelola pertanyaan assessment serta bobot dan status aktifnya.</li>
+                        <li>Mengelola responden dan melihat hasil penilaian.</li>
+                        <li>Memastikan data penilaian sesuai tanggal dan perhitungan capability level akurat.</li>
+                    </ul>
+                    <p class="mb-0"><strong>Catatan:</strong> Setiap perubahan master data harus dilakukan oleh admin untuk menjaga konsistensi perhitungan dan laporan.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+
 <!-- Charts Section -->
 <div id="chartsSection" class="row mb-4 no-print">
     <div class="col-lg-6">

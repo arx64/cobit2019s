@@ -52,6 +52,8 @@ CREATE TABLE `assessment_questions` (
   `process_id` int(11) UNSIGNED NOT NULL,
   `question` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `practice_reference` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `weight` tinyint(3) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'Bobot pertanyaan untuk perhitungan capability level',
+  `is_active` tinyint(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'Status aktif/nonaktif pertanyaan',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -122,6 +124,7 @@ CREATE TABLE `processes` (
   `code` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
   `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_active` tinyint(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'Status aktif/nonaktif domain/proses',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -166,8 +169,8 @@ CREATE TABLE `results` (
   `id` int(11) UNSIGNED NOT NULL,
   `process_id` int(11) UNSIGNED NOT NULL,
   `capability_level` decimal(3,2) DEFAULT 0.00 COMMENT 'Calculated capability level 0.00-5.00',
-  `target_level` decimal(3,2) DEFAULT 3.00 COMMENT 'Target capability level',
-  `gap` decimal(3,2) DEFAULT 3.00 COMMENT 'Difference between target and current',
+  `target_level` decimal(3,2) DEFAULT 4.00 COMMENT 'Target capability level',
+  `gap` decimal(3,2) DEFAULT 4.00 COMMENT 'Difference between target and current',
   `recommendation` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'JSON array of recommendations' CHECK (json_valid(`recommendation`)),
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
@@ -178,7 +181,7 @@ CREATE TABLE `results` (
 --
 
 INSERT INTO `results` (`id`, `process_id`, `capability_level`, `target_level`, `gap`, `recommendation`, `created_at`, `updated_at`) VALUES
-(1, 1, '0.00', '3.00', '3.00', '{\"gap\":3,\"level\":\"Major Gap\",\"color\":\"danger\",\"recommendations\":[\"Lakukan transformasi proses fundamental\",\"Susun roadmap perbaikan jangka panjang\",\"Pertimbangkan outsourcing untuk kompetensi yang kurang\",\"Lakukan pelatihan intensif untuk seluruh tim\",\"Implementasi framework governance yang komprehensif\",\"Evaluasi ulang struktur organisasi IT\"]}', '2026-05-17 12:41:19', '2026-05-17 12:41:19');
+(1, 1, '0.00', '4.00', '4.00', '{\"gap\":4,\"level\":\"Major Gap\",\"color\":\"danger\",\"recommendations\":[\"Lakukan transformasi proses fundamental\",\"Susun roadmap perbaikan jangka panjang\",\"Pertimbangkan outsourcing untuk kompetensi yang kurang\",\"Lakukan pelatihan intensif untuk seluruh tim\",\"Implementasi framework governance yang komprehensif\",\"Evaluasi ulang struktur organisasi IT\"]}', '2026-05-17 12:41:19', '2026-05-17 12:41:19');
 
 -- --------------------------------------------------------
 
@@ -253,7 +256,8 @@ ALTER TABLE `assessment_answers`
 --
 ALTER TABLE `assessment_questions`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `idx_process` (`process_id`);
+  ADD KEY `idx_process` (`process_id`),
+  ADD KEY `idx_question_active` (`process_id`, `is_active`);
 
 --
 -- Indeks untuk tabel `processes`
@@ -261,7 +265,8 @@ ALTER TABLE `assessment_questions`
 ALTER TABLE `processes`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `code` (`code`),
-  ADD KEY `idx_code` (`code`);
+  ADD KEY `idx_code` (`code`),
+  ADD KEY `idx_process_active` (`is_active`);
 
 --
 -- Indeks untuk tabel `respondents`

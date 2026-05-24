@@ -120,6 +120,36 @@ $baseUrl = 'index.php';
                             <span>Responden</span>
                         </a>
                     </li>
+                    <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+                        <li class="has-submenu <?php echo in_array($currentPage, ['processes', 'questions']) ? 'active open' : ''; ?>">
+                            <a
+                                href="#adminSubmenu"
+                                data-bs-toggle="collapse"
+                                class="d-flex justify-content-between align-items-center <?php echo in_array($currentPage, ['processes', 'questions']) ? '' : 'collapsed'; ?>">
+                                <div>
+                                    <i class="bi bi-gear-fill"></i>
+                                    <span>Master Data</span>
+                                </div>
+                                <i class="bi bi-chevron-down submenu-arrow"></i>
+                            </a>
+                            <ul
+                                id="adminSubmenu"
+                                class="submenu collapse list-unstyled <?php echo in_array($currentPage, ['processes', 'questions']) ? 'show' : ''; ?>">
+                                <li class="<?php echo $currentPage === 'processes' ? 'active' : ''; ?>">
+                                    <a href="<?php echo $baseUrl; ?>?page=processes">
+                                        <i class="bi bi-bookmark-fill me-2"></i>
+                                        <span>Domain / Proses</span>
+                                    </a>
+                                </li>
+                                <li class="<?php echo $currentPage === 'questions' ? 'active' : ''; ?>">
+                                    <a href="<?php echo $baseUrl; ?>?page=questions">
+                                        <i class="bi bi-list-ul me-2"></i>
+                                        <span>Pertanyaan Assessment</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    <?php endif; ?>
                     <li class="has-submenu <?php echo in_array($currentPage, ['rekomendasi-dss01', 'rekomendasi-dss02']) ? 'active open' : ''; ?>">
 
                         <a

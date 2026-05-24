@@ -54,6 +54,7 @@ class RecommendationController {
             $capabilityLevel = $assessmentModel
                 ->calculateCapabilityLevel(
                     $process['id'],
+                    null,
                     $selectedDate ?: null
                 );
 
@@ -64,13 +65,15 @@ class RecommendationController {
                     4
                 );
 
-            // Simpan hasil
-            $resultModel->saveResult([
-                'process_id' => $process['id'],
-                'capability_level' => $capabilityLevel,
-                'gap' => $recommendationData['gap'],
-                'recommendation' => json_encode($recommendationData)
-            ]);
+            // Simpan hasil hanya jika tidak sedang menampilkan hasil per tanggal
+            if (empty($selectedDate)) {
+                $resultModel->saveResult([
+                    'process_id' => $process['id'],
+                    'capability_level' => $capabilityLevel,
+                    'gap' => $recommendationData['gap'],
+                    'recommendation' => json_encode($recommendationData)
+                ]);
+            }
 
             $results[] = [
                 'process' => $process,

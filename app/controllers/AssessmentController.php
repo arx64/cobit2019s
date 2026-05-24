@@ -19,7 +19,7 @@ class AssessmentController {
         $respondentModel = new Respondent();
         $assessmentModel = new Assessment();
         
-        $processes = $processModel->getAll();
+        $processes = $processModel->getAll(true);
         $respondents = $respondentModel->getAll();
         
         // Ambil proses yang dipilih (default: DSS01)
@@ -101,21 +101,22 @@ class AssessmentController {
         
         // Simpan setiap jawaban
         foreach ($answers as $questionId => $value) {
-            // $assessmentModel->saveAnswer([
-            //     'question_id' => intval($questionId),
-            //     'respondent_id' => $respondentId,
-            //     'value' => intval($value)
-            // ]);
+            $intValue = intval($value);
+            if ($intValue < 0 || $intValue > 5) {
+                continue;
+            }
+
             $assessmentModel->saveAnswer([
                 'question_id' => intval($questionId),
                 'respondent_id' => $respondentId,
                 'assessment_date' => $date,
-                'value' => intval($value)
+                'value' => $intValue
             ]);
         }
         
-        // Hitung capability level
-        $capabilityLevel = $assessmentModel->calculateCapabilityLevel($processId);
+        // Hitung capability level untuk responden dan tanggal yang dipilih
+        $capabilityLevel = $assessmentModel->calculateCapabilityLevel($processId, $respondentId, $date);
+        error_log(sprintf('[ASSESSMENT] process=%d respondent=%d date=%s capability=%s', $processId, $respondentId, $date, $capabilityLevel));
         
         // Generate rekomendasi berdasarkan gap
         $recommendationData = $resultModel->generateRecommendation($capabilityLevel, 4);

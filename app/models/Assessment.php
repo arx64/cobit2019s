@@ -16,10 +16,66 @@ class Assessment {
     /**
      * Ambil semua pertanyaan berdasarkan proses
      */
-    public function getQuestionsByProcess($processId) {
-        $stmt = $this->db->prepare("SELECT * FROM assessment_questions WHERE process_id = :process_id ORDER BY id ASC");
+    public function getQuestionsByProcess($processId, $activeOnly = true) {
+        $sql = "SELECT * FROM assessment_questions WHERE process_id = :process_id";
+        if ($activeOnly) {
+            $sql .= " AND is_active = 1";
+        }
+        $sql .= " ORDER BY id ASC";
+
+        $stmt = $this->db->prepare($sql);
         $stmt->execute(['process_id' => $processId]);
         return $stmt->fetchAll();
+    }
+
+    public function getAllQuestions($activeOnly = true) {
+        $sql = "SELECT q.*, p.code AS process_code, p.name AS process_name FROM assessment_questions q JOIN processes p ON q.process_id = p.id";
+        if ($activeOnly) {
+            $sql .= " WHERE q.is_active = 1";
+        }
+        $sql .= " ORDER BY p.code ASC, q.id ASC";
+
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchAll();
+    }
+
+    public function getQuestionById($id) {
+        $stmt = $this->db->prepare("SELECT * FROM assessment_questions WHERE id = :id LIMIT 1");
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetch();
+    }
+
+    public function createQuestion($data) {
+        $stmt = $this->db->prepare("INSERT INTO assessment_questions (process_id, question, practice_reference, weight, is_active, created_at) VALUES (:process_id, :question, :practice_reference, :weight, :is_active, NOW())");
+        return $stmt->execute([
+            'process_id' => $data['process_id'],
+            'question' => $data['question'],
+            'practice_reference' => $data['practice_reference'],
+            'weight' => isset($data['weight']) ? intval($data['weight']) : 1,
+            'is_active' => isset($data['is_active']) ? intval($data['is_active']) : 1
+        ]);
+    }
+
+    public function updateQuestion($data) {
+        $stmt = $this->db->prepare("UPDATE assessment_questions SET process_id = :process_id, question = :question, practice_reference = :practice_reference, weight = :weight, is_active = :is_active WHERE id = :id");
+        return $stmt->execute([
+            'id' => $data['id'],
+            'process_id' => $data['process_id'],
+            'question' => $data['question'],
+            'practice_reference' => $data['practice_reference'],
+            'weight' => isset($data['weight']) ? intval($data['weight']) : 1,
+            'is_active' => isset($data['is_active']) ? intval($data['is_active']) : 1
+        ]);
+    }
+
+    public function deleteQuestion($id) {
+        $stmt = $this->db->prepare("DELETE FROM assessment_questions WHERE id = :id");
+        return $stmt->execute(['id' => $id]);
+    }
+
+    public function toggleQuestionActive($id, $active) {
+        $stmt = $this->db->prepare("UPDATE assessment_questions SET is_active = :is_active WHERE id = :id");
+        return $stmt->execute(['id' => $id, 'is_active' => $active ? 1 : 0]);
     }
     
     /**
@@ -67,31 +123,33 @@ class Assessment {
 
         $existing = $check->fetch();
 
-        if ($existing) {
+        $answeredBy = isset($_SESSION['user_id']) ? intval($_SESSION['user_id']) : null;
 
+        if ($existing) {
             $stmt = $this->db->prepare("
             UPDATE assessment_answers
-            SET value = ?, updated_at = NOW()
+            SET value = ?, updated_at = NOW(), answered_by = ?
             WHERE id = ?
         ");
 
             return $stmt->execute([
                 $data['value'],
+                $answeredBy,
                 $existing['id']
             ]);
         } else {
-
             $stmt = $this->db->prepare("
             INSERT INTO assessment_answers
-            (question_id, respondent_id, assessment_date, value, created_at, updated_at)
-            VALUES (?, ?, ?, ?, NOW(), NOW())
+            (question_id, respondent_id, assessment_date, value, answered_by, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, NOW(), NOW())
         ");
 
             return $stmt->execute([
                 $data['question_id'],
                 $data['respondent_id'],
                 $data['assessment_date'],
-                $data['value']
+                $data['value'],
+                $answeredBy
             ]);
         }
     }
@@ -145,26 +203,39 @@ class Assessment {
 
     
     /**
-     * Hitung capability level berdasarkan proses dan tanggal opsional
+     * Hitung capability level berdasarkan proses, responden, dan tanggal opsional
      */
-    public function calculateCapabilityLevel($processId, $date = null) {
+    public function calculateCapabilityLevel($processId, $respondentId = null, $date = null) {
         $sql = "
-            SELECT AVG(a.value) as avg_score 
-            FROM assessment_answers a 
-            JOIN assessment_questions q ON a.question_id = q.id 
+            SELECT
+                SUM(a.value * q.weight) AS weighted_score,
+                SUM(q.weight) AS total_weight
+            FROM assessment_answers a
+            JOIN assessment_questions q ON a.question_id = q.id
             WHERE q.process_id = :process_id";
-        
+
         $params = ['process_id' => $processId];
+
+        if ($respondentId !== null) {
+            $sql .= " AND a.respondent_id = :respondent_id";
+            $params['respondent_id'] = $respondentId;
+        }
+
         if ($date) {
-            $sql .= " AND DATE(a.updated_at) = :date";
+            $sql .= " AND a.assessment_date = :date";
             $params['date'] = $date;
         }
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
         $result = $stmt->fetch();
-        
-        return $result['avg_score'] ? round($result['avg_score'], 2) : 0;
+
+        if (!$result || !$result['total_weight']) {
+            return 0;
+        }
+
+        $avg = $result['weighted_score'] / $result['total_weight'];
+        return round($avg, 2);
     }
     
     /**
