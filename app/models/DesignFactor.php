@@ -21,10 +21,22 @@ class DesignFactor {
         if ($activeOnly) {
             $sql .= " WHERE is_active = 1";
         }
-        $sql .= " ORDER BY code ASC";
 
+        // fetch rows and apply natural numeric sort on the code (e.g. DF1, DF2, DF10)
         $stmt = $this->db->query($sql);
-        return $stmt->fetchAll();
+        $rows = $stmt->fetchAll();
+
+        usort($rows, function($a, $b) {
+            // extract numeric part from code, fallback to 0
+            $na = intval(preg_replace('/\D/', '', $a['code']));
+            $nb = intval(preg_replace('/\D/', '', $b['code']));
+            if ($na === $nb) {
+                return strcmp($a['code'], $b['code']);
+            }
+            return $na <=> $nb;
+        });
+
+        return $rows;
     }
     
     /**

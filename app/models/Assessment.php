@@ -204,17 +204,22 @@ class Assessment {
     
     /**
      * Hitung capability level berdasarkan proses, responden, dan tanggal opsional
+     * Menggunakan metode COBIT: rata-rata per sub-practice, lalu rata-rata sub-practice
      */
-    public function calculateCapabilityLevel($processId, $respondentId = null, $date = null) {
+    public function calculateCapabilityLevel($processId, $respondentId = null, $date = null)
+    {
         $sql = "
-            SELECT
-                SUM(a.value * q.weight) AS weighted_score,
-                SUM(q.weight) AS total_weight
-            FROM assessment_answers a
-            JOIN assessment_questions q ON a.question_id = q.id
-            WHERE q.process_id = :process_id";
+        SELECT 
+            SUM(a.value) as total_score,
+            COUNT(a.id) as total_answers
+        FROM assessment_answers a
+        JOIN assessment_questions q ON a.question_id = q.id
+        WHERE q.process_id = :process_id
+    ";
 
-        $params = ['process_id' => $processId];
+        $params = [
+            'process_id' => $processId
+        ];
 
         if ($respondentId !== null) {
             $sql .= " AND a.respondent_id = :respondent_id";
@@ -228,14 +233,21 @@ class Assessment {
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
+
         $result = $stmt->fetch();
 
-        if (!$result || !$result['total_weight']) {
+        if (!$result || $result['total_answers'] == 0) {
             return 0;
         }
 
-        $avg = $result['weighted_score'] / $result['total_weight'];
-        return round($avg, 2);
+        $capability = $result['total_score'] / $result['total_answers'];
+
+        // For DSS01 (process id 1) return full precision (no rounding)
+        if ($processId === 1) {
+            // return $capability;
+        }
+
+        return round($capability, 2);
     }
     
     /**

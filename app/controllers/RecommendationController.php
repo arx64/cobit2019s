@@ -7,6 +7,7 @@
 require_once 'app/models/Process.php';
 require_once 'app/models/Result.php';
 require_once 'app/models/Assessment.php';
+require_once 'app/models/Respondent.php';
 
 class RecommendationController {
     
@@ -116,6 +117,22 @@ class RecommendationController {
         $selectedProcessId = isset($_GET['process'])
             ? intval($_GET['process'])
             : 0;
+        
+        // Ambil nama responden dari penilaian terbaru
+        require_once 'config/database.php';
+        $db = getDB();
+        $stmt = $db->query("SELECT DISTINCT respondent_id FROM assessment_answers ORDER BY updated_at DESC LIMIT 1");
+        $latestAssessment = $stmt->fetch();
+        $respondentName = 'Operator Sistem';
+        
+        if ($latestAssessment && isset($latestAssessment['respondent_id'])) {
+            $respondentModel = new Respondent();
+            $respondent = $respondentModel->getById($latestAssessment['respondent_id']);
+            if ($respondent && isset($respondent['name'])) {
+                $respondentName = $respondent['name'];
+            }
+        }
+        
         require_once 'app/views/recommendation/index.php';
     }
     public static function dss01()

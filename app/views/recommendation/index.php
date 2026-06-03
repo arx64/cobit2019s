@@ -35,7 +35,39 @@ $reportDate = isset($_GET['date']) && !empty($_GET['date'])
     ? $_GET['date']
     : date('Y-m-d');
 
-$respondentName = $_SESSION['user_name'] ?? 'Operator Sistem';
+function formatDateIndo($dateString, $includeTime = false) {
+    $timestamp = strtotime($dateString);
+    if ($timestamp === false) {
+        return $dateString;
+    }
+
+    $months = [
+        1 => 'Januari',
+        2 => 'Februari',
+        3 => 'Maret',
+        4 => 'April',
+        5 => 'Mei',
+        6 => 'Juni',
+        7 => 'Juli',
+        8 => 'Agustus',
+        9 => 'September',
+        10 => 'Oktober',
+        11 => 'November',
+        12 => 'Desember'
+    ];
+
+    $day = date('d', $timestamp);
+    $month = $months[(int) date('n', $timestamp)];
+    $year = date('Y', $timestamp);
+    $formatted = sprintf('%s %s %s', $day, $month, $year);
+
+    if ($includeTime) {
+        $formatted .= ' ' . date('H:i:s', $timestamp);
+    }
+
+    return $formatted;
+}
+
 ob_start();
 ?>
 
@@ -43,7 +75,7 @@ ob_start();
 <div class="print-header d-none">
     <h2>Laporan Hasil Analisis COBIT 2019</h2>
     <p>Sistem Analisis Pengelolaan Layanan Desa Bogak Besar berbasis COBIT 2019</p>
-    <p>Tanggal: <?php echo date('d F Y'); ?></p>
+    <p>Tanggal: <?php echo formatDateIndo(date('Y-m-d')); ?></p>
     <hr>
 </div>
 
@@ -92,7 +124,7 @@ ob_start();
                         <i class="bi bi-exclamation-triangle fs-1"></i>
                     </div>
                     <div class="ms-3">
-                        <h3 class="mb-0"><?php echo number_format($totalGaps, 1); ?></h3>
+                        <h3 class="mb-0"><?php echo number_format($totalGaps, 2); ?></h3>
                         <p class="mb-0 opacity-75">Total Gap</p>
                     </div>
                 </div>
@@ -234,7 +266,7 @@ ob_start();
                                 <h6><i class="bi bi-lightbulb me-2"></i>Rekomendasi Prioritas:</h6>
                                 <ol class="mb-0">
                                     <?php foreach (array_slice($priorityProcess['recommendation']['recommendations'], 0, 3) as $rec): ?>
-                                        <li><?php echo $rec; ?></li>
+                                        <?php echo $rec; ?>
                                     <?php endforeach; ?>
                                 </ol>
                             </div>
@@ -367,54 +399,12 @@ ob_start();
         <?php endforeach; ?>
     </div>
 
-    <!-- Action Plan -->
-    <!-- <div class="row mt-4">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header bg-info text-white">
-                    <h5 class="mb-0"><i class="bi bi-calendar-check me-2"></i>Rencana Tindak Lanjut</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <h6><i class="bi bi-1-circle me-2 text-primary"></i>Jangka Pendek (0-3 Bulan)</h6>
-                            <ul class="small">
-                                <li>Dokumentasikan proses yang belum terdokumentasi</li>
-                                <li>Tetapkan tim tanggung jawab untuk setiap proses</li>
-                                <li>Buat SOP dasar untuk operasional e-Raport</li>
-                                <li>Lakukan audit keamanan sistem</li>
-                            </ul>
-                        </div>
-                        <div class="col-md-4">
-                            <h6><i class="bi bi-2-circle me-2 text-warning"></i>Jangka Menengah (3-6 Bulan)</h6>
-                            <ul class="small">
-                                <li>Implementasikan tools monitoring sistem</li>
-                                <li>Lakukan pelatihan untuk tim IT</li>
-                                <li>Bangun sistem backup dan recovery</li>
-                                <li>Integrasikan proses dengan sistem lain</li>
-                            </ul>
-                        </div>
-                        <div class="col-md-4">
-                            <h6><i class="bi bi-3-circle me-2 text-success"></i>Jangka Panjang (6-12 Bulan)</h6>
-                            <ul class="small">
-                                <li>Capai target capability level 3 untuk semua proses</li>
-                                <li>Implementasi framework governance komprehensif</li>
-                                <li>Automatisasi proses monitoring dan reporting</li>
-                                <li>Continuous improvement cycle</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
-
     <!-- Print Footer -->
     <div class="print-footer d-none">
         <hr>
         <p class="text-center text-muted">
             Dicetak dari Sistem Analisis Risiko TI berbasis COBIT 2019<br>
-            Tanggal: <?php echo date('d F Y H:i:s'); ?>
+            Tanggal: <?php echo formatDateIndo(date('Y-m-d H:i:s'), true); ?>
         </p>
     </div>
 
@@ -607,8 +597,8 @@ ob_start();
 
     // Data DSS02
     const dss02Labels = ['Current Level', 'Target Level'];
-    const dss02Current = chartCurrent[1] ?? 0;
-    const dss02Target = chartTarget[1] ?? 4;
+    const dss02Current = chartCurrent[0] ?? 0;
+    const dss02Target = chartTarget[0] ?? 4;
 
     // Common Options
     const chartOptions = {
@@ -860,7 +850,7 @@ ob_start();
 
             <tr>
                 <td><strong>Tanggal Penilaian</strong></td>
-                <td>: <?php echo date('d F Y', strtotime($reportDate)); ?></td>
+                <td>: <?php echo formatDateIndo($reportDate); ?></td>
             </tr>
         </table>
 
@@ -897,7 +887,7 @@ ob_start();
 
                 <?php foreach ($currentResult['recommendation']['recommendations'] as $rec): ?>
 
-                    <li><?php echo addslashes($rec); ?></li>
+                    <?php echo addslashes($rec); ?>
 
                 <?php endforeach; ?>
 
@@ -908,7 +898,7 @@ ob_start();
 
             <p>
                 Bogak Besar,
-                <?php echo date('d F Y'); ?>
+                <?php echo formatDateIndo($reportDate); ?>
             </p>
 
             <p>

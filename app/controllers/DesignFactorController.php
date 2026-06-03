@@ -13,7 +13,7 @@ class DesignFactorController {
      */
     public static function index() {
         $designFactorModel = new DesignFactor();
-        $designFactors = $designFactorModel->getAll(true);
+        $designFactors = $designFactorModel->getAll();
         
         // Detail design factors yang digunakan
         $dfDetails = [
