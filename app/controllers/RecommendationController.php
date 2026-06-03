@@ -21,7 +21,9 @@ class RecommendationController {
         $resultModel = new Result();
         $assessmentModel = new Assessment();
 
-        $selectedDate = isset($_GET['date']) ? $_GET['date'] : '';
+        // Hanya tampilkan hasil untuk tanggal hari ini.
+        $today = date('Y-m-d');
+        $selectedDate = $today; // override any provided date — only use today
         $selectedTab = isset($_GET['tab']) ? $_GET['tab'] : 'all';
 
         // Ambil process filter
@@ -59,11 +61,12 @@ class RecommendationController {
                     $selectedDate ?: null
                 );
 
-            // Generate rekomendasi
+            // Generate rekomendasi (pass process code so DSS01/DSS02 have distinct texts)
             $recommendationData = $resultModel
                 ->generateRecommendation(
                     $capabilityLevel,
-                    4
+                    4,
+                    $process['code'] ?? 'DSS01'
                 );
 
             // Simpan hasil hanya jika tidak sedang menampilkan hasil per tanggal
@@ -90,12 +93,14 @@ class RecommendationController {
             ? array_sum(array_column($results, 'capability_level')) / $totalProcesses
             : 0;
 
-        $totalGaps = array_sum(
-            array_column(
-                array_column($results, 'recommendation'),
-                'gap'
-            )
-        );
+        // Jumlahkan hanya gap positif (abaikan nilai negatif/0)
+        $totalGaps = 0;
+        foreach ($results as $r) {
+            $gap = isset($r['recommendation']['gap']) ? floatval($r['recommendation']['gap']) : 0;
+            if ($gap > 0) {
+                $totalGaps += $gap;
+            }
+        }
 
         // Priority process
         usort($results, function ($a, $b) {

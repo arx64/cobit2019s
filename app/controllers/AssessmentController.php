@@ -118,8 +118,11 @@ class AssessmentController {
         $capabilityLevel = $assessmentModel->calculateCapabilityLevel($processId, $respondentId, $date);
         error_log(sprintf('[ASSESSMENT] process=%d respondent=%d date=%s capability=%s', $processId, $respondentId, $date, $capabilityLevel));
         
-        // Generate rekomendasi berdasarkan gap
-        $recommendationData = $resultModel->generateRecommendation($capabilityLevel, 4);
+        // Generate rekomendasi berdasarkan gap (include process code)
+        $processModel = new Process();
+        $proc = $processModel->getById($processId);
+        $processCode = $proc['code'] ?? 'DSS01';
+        $recommendationData = $resultModel->generateRecommendation($capabilityLevel, 4, $processCode);
         
         // Simpan hasil
         $resultModel->saveResult([
