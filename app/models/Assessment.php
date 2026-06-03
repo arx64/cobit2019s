@@ -287,6 +287,15 @@ class Assessment {
         $stmt = $this->db->query("SELECT COUNT(DISTINCT question_id) as total FROM assessment_answers");
         return $stmt->fetch()['total'];
     }
+
+    /**
+     * Hitung total penilaian untuk tanggal tertentu
+     */
+    public function countAssessmentsByDate($date) {
+        $stmt = $this->db->prepare("SELECT COUNT(*) as total FROM assessment_answers WHERE assessment_date = :date");
+        $stmt->execute(['date' => $date]);
+        return $stmt->fetch()['total'] ?? 0;
+    }
     
     /**
      * Hapus semua jawaban untuk reset

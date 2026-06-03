@@ -102,7 +102,14 @@ ob_start();
                             <tbody>
                                 <?php foreach ($results as $result): ?>
                                     <?php
-                                    $recData = json_decode($result['recommendation'], true);
+                                    // `recommendation` can be stored as JSON string (from DB) or already as array
+                                    if (is_string($result['recommendation'])) {
+                                        $recData = json_decode($result['recommendation'], true) ?: [];
+                                    } elseif (is_array($result['recommendation'])) {
+                                        $recData = $result['recommendation'];
+                                    } else {
+                                        $recData = [];
+                                    }
                                     $statusClass = $recData['color'] ?? 'secondary';
                                     ?>
                                     <tr>

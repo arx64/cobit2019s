@@ -32,26 +32,45 @@ class DashboardController {
             'total_gaps' => $resultModel->countGaps()
         ];
 
-        // Ambil hasil analisis untuk ditampilkan di dashboard
-        $results = $resultModel->getAll();
+        // Hanya gunakan data penilaian untuk tanggal hari ini
+        $today = date('Y-m-d');
 
-        // Data untuk grafik
+        $processes = $processModel->getAll();
+
+        $results = [];
+
         $chartLabels = [];
         $chartCurrent = [];
         $chartTarget = [];
         $chartGaps = [];
 
-        foreach ($results as $result) {
+        foreach ($processes as $process) {
+            $capability = $assessmentModel->calculateCapabilityLevel($process['id'], null, $today);
+            $recommendation = $resultModel->generateRecommendation($capability, 4, $process['code'] ?? 'DSS01');
 
-            $chartLabels[] = $result['process_code'];
+            $results[] = [
+                'process' => $process,
+                'process_code' => $process['code'],
+                'process_name' => $process['name'],
+                'capability_level' => $capability,
+                'gap' => $recommendation['gap'],
+                'recommendation' => $recommendation
+            ];
 
-            $chartCurrent[] = (float)$result['capability_level'];
-
+            $chartLabels[] = $process['code'];
+            $chartCurrent[] = (float)$capability;
             $chartTarget[] = 4;
-
-            $chartGaps[] = (float)$result['gap'];
+            $chartGaps[] = (float)$recommendation['gap'];
         }
-        
+        // Update stats based on today's data
+        $stats['total_assessments'] = $assessmentModel->countAssessmentsByDate($today);
+        $stats['avg_capability'] = count($results) ? round(array_sum(array_column($results, 'capability_level')) / count($results), 2) : 0;
+        $stats['total_gaps'] = 0;
+        foreach ($results as $r) {
+            $g = isset($r['gap']) ? floatval($r['gap']) : 0;
+            if ($g > 0) $stats['total_gaps'] += $g;
+        }
+
         require_once 'app/views/dashboard/index.php';
     }
 }
