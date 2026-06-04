@@ -21,9 +21,11 @@ class RecommendationController {
         $resultModel = new Result();
         $assessmentModel = new Assessment();
 
-        // Hanya tampilkan hasil untuk tanggal hari ini.
+        // Ambil tanggal dari parameter atau gunakan hari ini
         $today = date('Y-m-d');
-        $selectedDate = $today; // override any provided date — only use today
+        $selectedDate = isset($_GET['date']) && !empty($_GET['date'])
+            ? $_GET['date']
+            : $today;
         $selectedTab = isset($_GET['tab']) ? $_GET['tab'] : 'all';
 
         // Ambil process filter

@@ -99,6 +99,44 @@ ob_start();
     </div>
 </div>
 
+<!-- Date Filter Section -->
+<div class="row mb-4 no-print">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <label for="dateFilter" class="form-label mb-0"><i class="bi bi-calendar-event me-2"></i>Filter Tanggal</label>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex gap-2">
+                            <select id="dateFilter" class="form-select" onchange="filterByDate()">
+                                <option value="">-- Pilih Tanggal --</option>
+                                <?php 
+                                if (!empty($availableDates)):
+                                    foreach ($availableDates as $dateRow):
+                                        $date = $dateRow['date'];
+                                        $selected = ($date === $reportDate) ? 'selected' : '';
+                                ?>
+                                    <option value="<?php echo $date; ?>" <?php echo $selected; ?>>
+                                        <?php echo formatDateIndo($date); ?>
+                                    </option>
+                                <?php 
+                                    endforeach;
+                                endif; 
+                                ?>
+                            </select>
+                            <a href="<?php echo $_SERVER['PHP_SELF']; ?>" class="btn btn-outline-secondary" title="Reset">
+                                <i class="bi bi-arrow-counterclockwise"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Summary Cards -->
 <div class="row g-3 mb-4">
     <div class="col-md-4">
@@ -939,6 +977,19 @@ ob_start();
         } else {
             chartsSection.classList.add('d-none');
             toggleText.textContent = 'Tampilkan Grafik';
+        }
+    }
+
+    // Filter by Date
+    function filterByDate() {
+        const dateSelect = document.getElementById('dateFilter');
+        const selectedDate = dateSelect.value;
+
+        if (selectedDate) {
+            // Build URL with date parameter
+            const url = new URL(window.location);
+            url.searchParams.set('date', selectedDate);
+            window.location.href = url.toString();
         }
     }
 </script>
