@@ -130,13 +130,13 @@ class RecommendationController {
         $db = getDB();
         $stmt = $db->query("SELECT DISTINCT respondent_id FROM assessment_answers ORDER BY updated_at DESC LIMIT 1");
         $latestAssessment = $stmt->fetch();
-        $respondentName = 'Operator Sistem';
+        $respondentPosition = 'Operator Sistem';
         
         if ($latestAssessment && isset($latestAssessment['respondent_id'])) {
             $respondentModel = new Respondent();
             $respondent = $respondentModel->getById($latestAssessment['respondent_id']);
-            if ($respondent && isset($respondent['name'])) {
-                $respondentName = $respondent['name'];
+            if ($respondent && isset($respondent['position'])) {
+                $respondentPosition = $respondent['position'];
             }
         }
         

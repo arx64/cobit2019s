@@ -872,8 +872,8 @@ ob_start();
 
         <table class="info-table">
             <tr>
-                <td width="220"><strong>Nama Responden</strong></td>
-                <td>: <?php echo $respondentName; ?></td>
+                <td width="220"><strong>Jabatan Responden</strong></td>
+                <td>: <?php echo $respondentPosition; ?></td>
             </tr>
 
             <tr>
