@@ -276,7 +276,7 @@ class Assessment {
      * Ambil semua tanggal penilaian
      */
     public function getAssessmentDates() {
-        $stmt = $this->db->query("SELECT DISTINCT DATE(updated_at) as date FROM assessment_answers ORDER BY date DESC");
+        $stmt = $this->db->query("SELECT DISTINCT assessment_date as date FROM assessment_answers ORDER BY assessment_date DESC");
         return $stmt->fetchAll();
     }
     
