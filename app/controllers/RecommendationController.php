@@ -124,18 +124,36 @@ class RecommendationController {
         $selectedProcessId = isset($_GET['process'])
             ? intval($_GET['process'])
             : 0;
-        
-        // Ambil nama responden dari penilaian terbaru
+
+        // Ambil jumlah responden berdasarkan tanggal yang dipilih
         require_once 'config/database.php';
         $db = getDB();
-        $stmt = $db->query("SELECT DISTINCT respondent_id FROM assessment_answers ORDER BY updated_at DESC LIMIT 1");
-        $latestAssessment = $stmt->fetch();
+
+        $stmt = $db->prepare("
+    SELECT DISTINCT respondent_id
+    FROM assessment_answers
+    WHERE assessment_date = ?
+");
+
+        $stmt->execute([$selectedDate]);
+        $respondents = $stmt->fetchAll();
+
+        $totalRespondents = count($respondents);
+
         $respondentPosition = 'Operator Sistem';
-        
-        if ($latestAssessment && isset($latestAssessment['respondent_id'])) {
+
+        if ($totalRespondents = 3) {
+
+            $respondentPosition = 'Perangkat Desa';
+        } elseif ($totalRespondents > 0) {
+
             $respondentModel = new Respondent();
-            $respondent = $respondentModel->getById($latestAssessment['respondent_id']);
-            if ($respondent && isset($respondent['position'])) {
+
+            $respondent = $respondentModel->getById(
+                $respondents[0]['respondent_id']
+            );
+
+            if ($respondent && !empty($respondent['position'])) {
                 $respondentPosition = $respondent['position'];
             }
         }
