@@ -187,25 +187,13 @@ Semua controller berbentuk **class static** (method dipanggil langsung tanpa mem
 | Baris | Kode | Fungsi |
 |---|---|---|
 | [15-16](app/controllers/DesignFactorController.php#L15-L16) | `$designFactorModel->getAll()` | Ambil design factor dari database |
-| [19-91](app/controllers/DesignFactorController.php#L19-L91) | `$dfDetails` | Penjelasan detail 4 design factor (hardcode): |
+| [15-16](app/controllers/DesignFactorController.php#L15-L16) | `$designFactorModel->getAll()` | Ambil semua design factor dari database |
 
-**Empat Design Factor yang Digunakan:**
+**Data design factor berasal dari database** (tabel `design_factors`), bukan hardcode. Yang ditampilkan di halaman design factor adalah seluruh data dari tabel tersebut. Untuk menentukan design factor mana yang sedang digunakan/diterapkan, dilihat dari kolom **`is_active`**:
+- **`is_active = 1`** → design factor sedang aktif/digunakan dalam analisis
+- **`is_active = 0`** → design factor tidak aktif/tidak digunakan
 
-**DF02 — Enterprise Goals** ([baris 20-37](app/controllers/DesignFactorController.php#L20-L37)): Tujuan strategis organisasi dan bagaimana TI mendukungnya.
-- Fokus: Penyampaian layanan, keamanan informasi, kepatuhan, optimasi sumber daya, transformasi digital
-- Konteks desa: Ketersediaan 24/7, keamanan data, efisiensi infrastruktur
-
-**DF03 — Risk Profile** ([baris 38-55](app/controllers/DesignFactorController.php#L38-L55)): Profil risiko TI organisasi.
-- Risiko: Ketersediaan sistem, kehilangan data, akses tidak sah, kegagalan infrastruktur, bencana
-- Risiko desa: Server down, corrupt database, akses tidak berwenang
-
-**DF04 — I&T Related Issues** ([baris 56-73](app/controllers/DesignFactorController.php#L56-L73)): Isu-isu terkait TI yang mempengaruhi tata kelola.
-- Isu: Keterbatasan SDM TI, ketergantungan vendor, sistem lama
-- Isu desa: Anggaran terbatas, ketergantungan developer, kurang tenaga TI profesional
-
-**DF06 — Role of IT** ([baris 74-91](app/controllers/DesignFactorController.php#L74-L91)): Peran TI dalam organisasi.
-- Peran: Supporter, driver, partner, transformer
-- Konteks desa: Mendukung administrasi perkantoran, memfasilitasi pelayanan publik
+Admin bisa mengaktifkan atau menonaktifkan design factor melalui halaman Master Data → Design Factor.
 
 ---
 
@@ -513,7 +501,7 @@ Tabel explain: DSS01 dan DSS02 dengan alasan dipilih, fokus area, dan tautan kue
 
 **Path:** [`app/views/design-factor/index.php`](app/views/design-factor/index.php)
 
-Menampilkan design factor dari database (tabel) + penjelasan detail DF02, DF03, DF04, DF06 (dari controller).
+Menampilkan design factor dari database (tabel `design_factors`) sesuai data yang ada.
 
 ---
 
@@ -799,16 +787,13 @@ Class `DesignFactor` ([baris 9-98](app/models/DesignFactor.php#L9-L98)). CRUD le
 **Path:** [`app/controllers/DesignFactorController.php`](app/controllers/DesignFactorController.php)
 
 Method `index()` ([baris 14-94](app/controllers/DesignFactorController.php#L14-L94)):
-- **[Baris 15-16](app/controllers/DesignFactorController.php#L15-L16):** Ambil data dari database via model
-- **[Baris 19-91](app/controllers/DesignFactorController.php#L19-L91):** Array `$dfDetails` berisi penjelasan 4 design factor dalam konteks Desa Bogak Besar:
-  - **DF02 (Enterprise Goals)** [baris 20-37](app/controllers/DesignFactorController.php#L20-L37): Tujuan desa — layanan TI 24/7, keamanan data
-  - **DF03 (Risk Profile)** [baris 38-55](app/controllers/DesignFactorController.php#L38-L55): Risiko — server down, data corrupt, akses tidak sah
-  - **DF04 (I&T Related Issues)** [baris 56-73](app/controllers/DesignFactorController.php#L56-L73): Masalah — anggaran terbatas, ketergantungan developer
-  - **DF06 (Role of IT)** [baris 74-91](app/controllers/DesignFactorController.php#L74-L91): Peran TI — supporter administrasi & driver pembelajaran digital
+- **[Baris 15-16](app/controllers/DesignFactorController.php#L15-L16):** Ambil semua data design factor dari database via model `DesignFactor::getAll()`
+- Data yang ditampilkan adalah **seluruh isi tabel `design_factors`** — bukan hardcode
+- Design factor yang **`is_active = 1`** berarti sedang digunakan/diterapkan dalam analisis
 
 ### 4. View (User) — `app/views/design-factor/index.php`
 
-Menampilkan design factor dari database dalam bentuk tabel + penjelasan detail 4 factor.
+Menampilkan design factor dari database dalam bentuk tabel.
 
 ### 5. View (Admin) — `app/views/admin/design_factors.php`
 
@@ -820,31 +805,15 @@ Method `designFactors()`, `saveDesignFactor()`, `deleteDesignFactor()`, `toggleD
 
 ### Hubungan Design Factor dengan Seluruh Sistem:
 
-Design Factor **tidak secara langsung** mempengaruhi perhitungan capability level. Fungsinya sebagai **kerangka acuan/konteks**:
+Design Factor berfungsi sebagai **kerangka acuan/konteks** untuk memahami kebutuhan tata kelola TI. Data design factor diambil dari database (tabel `design_factors`), dan yang aktif (`is_active = 1`) menjadi pertimbangan dalam analisis.
 
-```
-DF02 (Enterprise Goals)
-  → Tujuan desa: pelayanan administrasi handal
-  → Maka proses DSS01 (Manage Operations) & DSS02 (Manage Service Requests) dipilih
-  → Pertanyaan assessment dirancang untuk mengukur proses tersebut
+Design factor yang aktif menunjukkan aspek-aspek tata kelola TI yang menjadi fokus perhatian, seperti:
+- Tujuan strategis organisasi dan bagaimana TI mendukungnya (*Enterprise Goals*)
+- Profil risiko TI yang dihadapi organisasi (*Risk Profile*)
+- Isu-isu terkait TI yang mempengaruhi tata kelola (*I&T Related Issues*)
+- Peran TI dalam organisasi (*Role of IT*)
 
-DF03 (Risk Profile)
-  → Risiko: server down, data hilang
-  → Maka pertanyaan difokuskan pada: pemeliharaan server, backup data, penanganan insiden
-
-DF04 (I&T Related Issues)
-  → Masalah: anggaran terbatas, kurang tenaga TI
-  → Maka rekomendasi disesuaikan: SOP sederhana, buku ceklis, SK Kades (bukan beli software mahal)
-
-DF06 (Role of IT)
-  → Peran TI: supporter (bukan transformer)
-  → Maka target level 4.0 (Terukur) sudah cukup realistis, bukan 5.0 (Optimasi)
-```
-
-**Contoh nyata dalam kode:**
-- Pilihan proses DSS01 & DSS02 didasarkan pada DF02 (Enterprise Goals desa)
-- Pertanyaan assessment (di database tabel `assessment_questions`) mencakup: pemeliharaan perangkat, penanganan insiden, backup data — sesuai DF03 (Risk Profile)
-- Rekomendasi di [`Result.php` baris 114-199](app/models/Result.php#L114-L199) menggunakan bahasa dan solusi yang sesuai konteks desa (SOP, buku ceklis, SK Kades, APBDes) — bukan solusi enterprise mahal
+Semakin banyak design factor yang diaktifkan, semakin kompleks dan komprehensif analisis tata kelola TI yang dilakukan.
 
 ---
 
