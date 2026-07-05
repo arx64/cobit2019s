@@ -14,7 +14,7 @@ ob_start();
     <div class="col-12">
         <div class="page-header">
             <h4><i class="bi bi-diagram-3 me-2"></i>Framework COBIT 2019</h4>
-            <p class="text-muted mb-0">Proses-proses yang dianalisis dalam sistem e-Raport</p>
+            <p class="text-muted mb-0">Proses-proses yang dianalisis dalam sistem</p>
         </div>
     </div>
 </div> -->

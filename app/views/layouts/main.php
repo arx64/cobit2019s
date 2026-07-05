@@ -25,7 +25,7 @@ $baseUrl = 'index.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Sistem Analisis Risiko TI berbasis COBIT 2019 untuk e-Raport">
+    <meta name="description" content="Sistem Analisis Risiko TI berbasis COBIT 2019">
     <title><?php echo isset($title) ? $title . ' - ' : ''; ?>Analisis Pengelolaan Layanan Desa Bogak Besar</title>
 
     <!-- Bootstrap 5 CSS -->

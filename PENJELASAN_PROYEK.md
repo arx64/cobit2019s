@@ -193,19 +193,19 @@ Semua controller berbentuk **class static** (method dipanggil langsung tanpa mem
 
 **DF02 — Enterprise Goals** ([baris 20-37](app/controllers/DesignFactorController.php#L20-L37)): Tujuan strategis organisasi dan bagaimana TI mendukungnya.
 - Fokus: Penyampaian layanan, keamanan informasi, kepatuhan, optimasi sumber daya, transformasi digital
-- Konteks e-Raport: Ketersediaan 24/7, keamanan data nilai, efisiensi infrastruktur
+- Konteks desa: Ketersediaan 24/7, keamanan data, efisiensi infrastruktur
 
 **DF03 — Risk Profile** ([baris 38-55](app/controllers/DesignFactorController.php#L38-L55)): Profil risiko TI organisasi.
 - Risiko: Ketersediaan sistem, kehilangan data, akses tidak sah, kegagalan infrastruktur, bencana
-- Risiko e-Raport: Server down saat input nilai, corrupt database, akses tidak berwenang
+- Risiko desa: Server down, corrupt database, akses tidak berwenang
 
 **DF04 — I&T Related Issues** ([baris 56-73](app/controllers/DesignFactorController.php#L56-L73)): Isu-isu terkait TI yang mempengaruhi tata kelola.
 - Isu: Keterbatasan SDM TI, ketergantungan vendor, sistem lama
-- Isu sekolah: Anggaran terbatas, ketergantungan developer, kurang tenaga TI profesional
+- Isu desa: Anggaran terbatas, ketergantungan developer, kurang tenaga TI profesional
 
 **DF06 — Role of IT** ([baris 74-91](app/controllers/DesignFactorController.php#L74-L91)): Peran TI dalam organisasi.
 - Peran: Supporter, driver, partner, transformer
-- Konteks sekolah: Mendukung administrasi akademik, memfasilitasi pembelajaran digital
+- Konteks desa: Mendukung administrasi perkantoran, memfasilitasi pelayanan publik
 
 ---
 
@@ -801,7 +801,7 @@ Class `DesignFactor` ([baris 9-98](app/models/DesignFactor.php#L9-L98)). CRUD le
 Method `index()` ([baris 14-94](app/controllers/DesignFactorController.php#L14-L94)):
 - **[Baris 15-16](app/controllers/DesignFactorController.php#L15-L16):** Ambil data dari database via model
 - **[Baris 19-91](app/controllers/DesignFactorController.php#L19-L91):** Array `$dfDetails` berisi penjelasan 4 design factor dalam konteks Desa Bogak Besar:
-  - **DF02 (Enterprise Goals)** [baris 20-37](app/controllers/DesignFactorController.php#L20-L37): Tujuan desa — e-Raport 24/7, keamanan data nilai
+  - **DF02 (Enterprise Goals)** [baris 20-37](app/controllers/DesignFactorController.php#L20-L37): Tujuan desa — layanan TI 24/7, keamanan data
   - **DF03 (Risk Profile)** [baris 38-55](app/controllers/DesignFactorController.php#L38-L55): Risiko — server down, data corrupt, akses tidak sah
   - **DF04 (I&T Related Issues)** [baris 56-73](app/controllers/DesignFactorController.php#L56-L73): Masalah — anggaran terbatas, ketergantungan developer
   - **DF06 (Role of IT)** [baris 74-91](app/controllers/DesignFactorController.php#L74-L91): Peran TI — supporter administrasi & driver pembelajaran digital

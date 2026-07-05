@@ -27,12 +27,12 @@ class DesignFactorController {
                     'Optimasi sumber daya TI',
                     'Transformasi digital'
                 ],
-                'e_raport_context' => [
-                    'Ketersediaan sistem e-Raport 24/7',
-                    'Keamanan data nilai siswa',
-                    'Kepatuhan terhadap standar pendidikan',
-                    'Efisiensi penggunaan infrastruktur TI sekolah',
-                    'Inovasi dalam proses penilaian'
+                'village_context' => [
+                    'Ketersediaan layanan TI 24/7',
+                    'Keamanan data dan informasi',
+                    'Kepatuhan terhadap regulasi',
+                    'Efisiensi penggunaan infrastruktur TI',
+                    'Inovasi dalam pelayanan publik'
                 ]
             ],
             'DF03' => [
@@ -45,11 +45,11 @@ class DesignFactorController {
                     'Risiko kegagalan infrastruktur',
                     'Risiko bencana dan gangguan'
                 ],
-                'e_raport_risks' => [
-                    'Server e-Raport down saat waktu penginputan nilai',
-                    'Hilangnya data nilai akibat corrupt database',
-                    'Akses guru/wali kelas yang tidak berwenang',
-                    'Kerusakan hardware server',
+                'village_risks' => [
+                    'Gangguan layanan TI saat jam operasional',
+                    'Hilangnya data akibat corrupt database',
+                    'Akses tidak sah terhadap data dan informasi',
+                    'Kerusakan hardware dan infrastruktur TI',
                     'Kehilangan data akibat bencana alam'
                 ]
             ],
@@ -63,12 +63,12 @@ class DesignFactorController {
                     'Keterbatasan kompetensi SDM TI',
                     'Pertumbuhan data yang eksponensial'
                 ],
-                'e_raport_issues' => [
-                    'Keterbatasan anggaran TI sekolah',
+                'village_issues' => [
+                    'Keterbatasan anggaran TI',
                     'Ketergantungan pada pengembang aplikasi',
                     'Sistem lama yang belum terintegrasi',
                     'Kurangnya tenaga TI profesional',
-                    'Volume data siswa yang terus bertambah'
+                    'Volume data yang terus bertambah'
                 ]
             ],
             'DF06' => [
@@ -80,12 +80,12 @@ class DesignFactorController {
                     'IT sebagai partner - kolaborasi strategis',
                     'IT sebagai transformer - transformasi bisnis'
                 ],
-                'school_it_role' => 'Dalam konteks sekolah, TI umumnya berperan sebagai supporter dan driver untuk:
+                'village_it_role' => 'Dalam konteks desa, TI umumnya berperan sebagai supporter dan driver untuk:
                     <ul>
-                        <li>Mendukung proses administrasi akademik</li>
-                        <li>Memfasilitasi pembelajaran digital</li>
-                        <li>Meningkatkan efisiensi proses penilaian</li>
-                        <li>Mendorong transparansi informasi pendidikan</li>
+                        <li>Mendukung proses administrasi perkantoran</li>
+                        <li>Memfasilitasi pelayanan publik berbasis digital</li>
+                        <li>Meningkatkan efisiensi proses pelayanan</li>
+                        <li>Mendorong transparansi informasi publik</li>
                     </ul>'
             ]
         ];
